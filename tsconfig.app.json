@@ -1,0 +1,77 @@
+{
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "ESNext",
+    "moduleDetection": "force",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "noFallthroughCasesInSwitch": false,
+    "noImplicitAny": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@contexts/*": [
+        "./src/components/contexts/*"
+      ],
+      "@hooks/*": [
+        "./src/components/hooks/*"
+      ],
+      "@lib/*": [
+        "./src/components/lib/*"
+      ],
+      "@integrations/*": [
+        "./src/components/integrations/*"
+      ],
+      "@types/*": [
+        "./src/components/types/*"
+      ],
+      "@assets/*": [
+        "./src/assets/*"
+      ],
+      "@components/*": [
+        "./src/components/*"
+      ],
+      "@/contexts/*": [
+        "./src/components/contexts/*"
+      ],
+      "@/hooks/*": [
+        "./src/components/hooks/*"
+      ],
+      "@/lib/*": [
+        "./src/components/lib/*"
+      ],
+      "@/integrations/*": [
+        "./src/components/integrations/*"
+      ],
+      "@/types/*": [
+        "./src/components/types/*"
+      ],
+      "@/assets/*": [
+        "./src/assets/*"
+      ],
+      "@/components/*": [
+        "./src/components/*"
+      ]
+    },
+    "skipLibCheck": true,
+    "strict": false,
+    "target": "ES2020",
+    "types": [
+      "vitest/globals"
+    ],
+    "useDefineForClassFields": true
+  },
+  "include": [
+    "src"
+  ]
+}

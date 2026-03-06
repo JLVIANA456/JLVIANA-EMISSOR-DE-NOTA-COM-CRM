@@ -1,0 +1,1 @@
+ALTER TABLE public.people ADD COLUMN termination_date date DEFAULT NULL;

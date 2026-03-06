@@ -1,0 +1,5 @@
+/vendor/
+/.idea/
+/examples/certificate.pfx
+/examples/test.php
+composer.lock
