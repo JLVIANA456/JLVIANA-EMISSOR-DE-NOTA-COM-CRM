@@ -5,6 +5,7 @@ import { useUserRole } from "@/components/hooks/useUserRole";
 import { canAccessRoute } from "@/components/lib/permissions";
 import {
   Brain,
+  BookOpen,
   FileText,
   Receipt,
   Wallet,
@@ -44,6 +45,7 @@ const navigation = [
     items: [
       { name: "Overview", href: "/overview", icon: Compass },
       { name: "Executivo", href: "/", icon: LayoutDashboard },
+      { name: "Guia do Sistema", href: "/guia", icon: BookOpen },
     ],
   },
   {

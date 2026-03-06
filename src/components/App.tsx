@@ -42,6 +42,7 @@ import Planejamentos from "./pages/Planejamentos";
 import ClientesContabilidade from "./pages/ClientesContabilidade";
 import ContasBancarias from "./pages/ContasBancarias";
 import Overview from "./pages/Overview";
+import SystemGuide from "./pages/SystemGuide";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -92,6 +93,7 @@ const App = () => {
                 <Route path="/portal-pj/dashboard" element={<ProtectedPjRoute />} />
                 <Route element={<ProtectedRoutes />}>
                   <Route path="/overview" element={<Overview />} />
+                  <Route path="/guia" element={<SystemGuide />} />
                   <Route path="/" element={<Index />} />
                   <Route path="/cfo-digital" element={<RoleGuard path="/cfo-digital"><CfoDigital /></RoleGuard>} />
                   <Route path="/emissao-notas" element={<EmissaoNotas />} />

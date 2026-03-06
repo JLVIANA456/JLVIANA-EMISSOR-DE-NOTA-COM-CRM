@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useAuth } from "@/components/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -17,9 +17,16 @@ import { Slider } from "@/components/ui/slider";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { CATEGORY_LABELS, CONTRACT_TYPE_OPTIONS, CONTRACT_STATUS_LABELS } from "@/components/lib/contract-constants";
 import { formatCNPJ } from "@/components/lib/cnpj";
-import { Document, Packer, Paragraph, TextRun, AlignmentType } from "docx";
+import { Document, Packer, Paragraph, TextRun, AlignmentType, HeadingLevel } from "docx";
 import { saveAs } from "file-saver";
 import jsPDF from "jspdf";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+
+// Polyfill for global if needed by Quill
+if (typeof window !== 'undefined' && !(window as any).global) {
+  (window as any).global = window;
+}
 
 const ACCOUNTING_TEMPLATE = `CONTRATO DE PRESTAÇÃO DE SERVIÇOS CONTÁBEIS
 
@@ -420,6 +427,35 @@ export function ContractGenerator({ onNavigate }: { onNavigate?: (tab: string) =
     (t: any) => t.category === form.category && t.contract_type === form.contract_type
   );
 
+  const textToHtml = (text: string) => {
+    if (!text) return "";
+    // If already HTML (simple check)
+    if (text.trim().startsWith("<")) return text;
+
+    return text
+      .split('\n')
+      .map(line => {
+        let content = line.trim();
+        if (!content) return '<p><br></p>';
+        
+        // Headers
+        if (content.startsWith('# ')) return `<h1>${content.substring(2)}</h1>`;
+        if (content.startsWith('## ')) return `<h2>${content.substring(3)}</h2>`;
+        if (content.startsWith('### ')) return `<h3>${content.substring(4)}</h3>`;
+        
+        // Bold Clause Titles (custom heuristic)
+        if (/^CL[ÁA]USULA/i.test(content) || content.startsWith("CONTRATO") || content.startsWith("ANEXO")) {
+          return `<p><strong>${content}</strong></p>`;
+        }
+        
+        // Markdown bold
+        content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        
+        return `<p>${content}</p>`;
+      })
+      .join('');
+  };
+
   const handleGenerate = async () => {
     if (!user) return;
     setGenerating(true);
@@ -445,8 +481,7 @@ export function ContractGenerator({ onNavigate }: { onNavigate?: (tab: string) =
       content = content.replace("[TESTEMUNHA2_NOME]", form.witness2_name || "________________");
       content = content.replace("[TESTEMUNHA2_CPF]", form.witness2_cpf || "________________");
 
-      // Pass to AI to "polish" or "verify" if needed, or just set it
-      setGeneratedContent(content);
+      setGeneratedContent(textToHtml(content));
       setStep(4);
       setGenerating(false);
       toast.success("Contrato contábil estruturado com sucesso!");
@@ -460,7 +495,7 @@ export function ContractGenerator({ onNavigate }: { onNavigate?: (tab: string) =
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
 
-      setGeneratedContent(data.content);
+      setGeneratedContent(textToHtml(data.content));
       setStep(4);
       toast.success("Contrato gerado com sucesso!");
     } catch (err: any) {
@@ -471,6 +506,7 @@ export function ContractGenerator({ onNavigate }: { onNavigate?: (tab: string) =
   };
 
   const getFontMap = (family: string) => {
+    if (!family) return { word: 'Times New Roman', pdf: 'times', tailwind: 'font-serif' };
     switch (family) {
       case 'serif': return { word: 'Times New Roman', pdf: 'times', tailwind: 'font-serif' };
       case 'sans': return { word: 'Arial', pdf: 'helvetica', tailwind: 'font-sans' };
@@ -486,44 +522,82 @@ export function ContractGenerator({ onNavigate }: { onNavigate?: (tab: string) =
     const alignmentMap: Record<string, AlignmentType> = {
       'left': AlignmentType.LEFT,
       'center': AlignmentType.CENTER,
-      'justify': AlignmentType.JUSTIFIED
+      'justify': AlignmentType.JUSTIFIED,
+      'right': AlignmentType.RIGHT
     };
+
+    // Parse HTML content
+    const parser = new DOMParser();
+    const docHtml = parser.parseFromString(generatedContent, 'text/html');
+    
+    const children: Paragraph[] = [];
+
+    const processInline = (node: Node, styles: any = {}): TextRun[] => {
+      if (node.nodeType === 3) { // Text
+        return [new TextRun({ 
+          text: node.textContent || '', 
+          ...styles, 
+          font: fontInfo.word, 
+          size: (styles.size || docStyles.fontSize) * 2 
+        })];
+      }
+      if (node.nodeType === 1) { // Element
+        const el = node as HTMLElement;
+        const newStyles = { ...styles };
+        if (el.tagName === 'STRONG' || el.tagName === 'B') newStyles.bold = true;
+        if (el.tagName === 'EM' || el.tagName === 'I') newStyles.italics = true;
+        if (el.tagName === 'U') newStyles.underline = { type: "single" };
+        if (el.tagName === 'S') newStyles.strike = true;
+        
+        // Handle font size from Quill classes (ql-size-large etc) could be complex, skipping for now
+        
+        let runs: TextRun[] = [];
+        el.childNodes.forEach(child => {
+          runs = [...runs, ...processInline(child, newStyles)];
+        });
+        return runs;
+      }
+      return [];
+    };
+
+    docHtml.body.childNodes.forEach((node) => {
+      if (node.nodeType === 1) { // Element (p, h1, etc)
+        const el = node as HTMLElement;
+        const pOptions: any = {
+           spacing: { after: 200, line: docStyles.lineHeight * 240 },
+           alignment: alignmentMap[docStyles.textAlign]
+        };
+
+        if (el.tagName === 'H1') { pOptions.heading = HeadingLevel.HEADING_1; pOptions.alignment = AlignmentType.CENTER; }
+        else if (el.tagName === 'H2') pOptions.heading = HeadingLevel.HEADING_2;
+        else if (el.tagName === 'H3') pOptions.heading = HeadingLevel.HEADING_3;
+        
+        // Quill alignment classes
+        if (el.classList.contains('ql-align-center')) pOptions.alignment = AlignmentType.CENTER;
+        if (el.classList.contains('ql-align-right')) pOptions.alignment = AlignmentType.RIGHT;
+        if (el.classList.contains('ql-align-justify')) pOptions.alignment = AlignmentType.JUSTIFIED;
+
+        const runs = processInline(node);
+        children.push(new Paragraph({ ...pOptions, children: runs }));
+      }
+    });
 
     const doc = new Document({
       sections: [{
         properties: {
           page: {
             margin: {
-              top: docStyles.marginTop * 56.7, // mm to twips (approx)
+              top: docStyles.marginTop * 56.7,
               bottom: docStyles.marginBottom * 56.7,
               left: docStyles.marginLeft * 56.7,
               right: docStyles.marginRight * 56.7,
             }
           }
         },
-        children: generatedContent.split("\n").map(line => {
-          // Detect headers for bolding
-          const isHeader = line.startsWith("#") || line.startsWith("**") || /^CL[ÁA]USULA/i.test(line);
-          const cleanLine = line.replace(/^#{1,6}\s*/, "").replace(/\*\*/g, "").trim();
-          
-          return new Paragraph({
-            children: [
-              new TextRun({ 
-                text: cleanLine, 
-                font: fontInfo.word, 
-                size: docStyles.fontSize * 2, // Half-points
-                bold: isHeader
-              })
-            ],
-            alignment: isHeader ? AlignmentType.CENTER : alignmentMap[docStyles.textAlign],
-            spacing: { 
-              after: 200,
-              line: docStyles.lineHeight * 240, // 240 = 1 line
-            }
-          });
-        }),
+        children: children
       }]
     });
+
     Packer.toBlob(doc).then(blob => {
       saveAs(blob, `Contrato_Contabil_${form.company_razao_social.replace(/\s+/g, '_')}.docx`);
       toast.success("Contrato exportado para DOCX!");
@@ -549,54 +623,64 @@ export function ContractGenerator({ onNavigate }: { onNavigate?: (tab: string) =
     const effectiveWidth = pageWidth - docStyles.marginLeft - docStyles.marginRight;
     const startX = docStyles.marginLeft;
     let cursorY = docStyles.marginTop;
-    const lineHeightMm = docStyles.fontSize * 0.3527 * docStyles.lineHeight; // pt to mm approx
+    const lineHeightMm = docStyles.fontSize * 0.3527 * docStyles.lineHeight;
 
-    const lines = generatedContent.split("\n");
+    // Simple HTML to Text for PDF (since jsPDF html() is complex without setup)
+    const parser = new DOMParser();
+    const docHtml = parser.parseFromString(generatedContent, 'text/html');
+    
+    // We iterate paragraphs similar to DOCX but draw text
+    docHtml.body.childNodes.forEach((node) => {
+        if (node.nodeType === 1) {
+            const el = node as HTMLElement;
+            const text = el.textContent || "";
+            if (!text.trim()) {
+                cursorY += lineHeightMm;
+                return;
+            }
 
-    lines.forEach((rawLine) => {
-      const isHeader = rawLine.startsWith("#") || rawLine.startsWith("**") || /^CL[ÁA]USULA/i.test(rawLine);
-      const cleanLine = rawLine.replace(/^#{1,6}\s*/, "").replace(/\*\*/g, "").trim();
+            // Bold headers
+            const isHeader = /^H[1-6]/.test(el.tagName);
+            if (isHeader) docUrl.setFont(fontInfo.pdf, "bold");
+            else docUrl.setFont(fontInfo.pdf, "normal");
 
-      if (isHeader) {
-        docUrl.setFont(fontInfo.pdf, "bold");
-      } else {
-        docUrl.setFont(fontInfo.pdf, "normal");
-      }
+            const splitLines = docUrl.splitTextToSize(text, effectiveWidth);
+            
+            splitLines.forEach((splitLine: string) => {
+                if (cursorY + lineHeightMm > pageHeight - docStyles.marginBottom) {
+                  docUrl.addPage();
+                  cursorY = docStyles.marginTop;
+                }
+                
+                // Alignment
+                let xPos = startX;
+                let align: "left" | "center" | "right" | "justify" = "left";
+                
+                let textAlign = docStyles.textAlign;
+                if (el.classList.contains('ql-align-center')) textAlign = 'center';
+                if (el.classList.contains('ql-align-right')) textAlign = 'right';
+                if (el.classList.contains('ql-align-justify')) textAlign = 'justify';
+                if (isHeader) textAlign = 'center';
 
-      if (!cleanLine) {
-        cursorY += lineHeightMm;
-        return;
-      }
+                if (textAlign === 'center') {
+                    xPos = pageWidth / 2;
+                    align = "center";
+                } else if (textAlign === 'right') {
+                    xPos = pageWidth - docStyles.marginRight;
+                    align = "right";
+                } else if (textAlign === 'justify') {
+                    align = "justify";
+                }
 
-      const splitLines = docUrl.splitTextToSize(cleanLine, effectiveWidth);
-      
-      splitLines.forEach((splitLine: string) => {
-        if (cursorY + lineHeightMm > pageHeight - docStyles.marginBottom) {
-          docUrl.addPage();
-          cursorY = docStyles.marginTop;
+                docUrl.text(splitLine, xPos, cursorY, { align: align as any, maxWidth: effectiveWidth });
+                cursorY += lineHeightMm;
+            });
+            cursorY += lineHeightMm * 0.5;
         }
-
-        // Simple alignment logic for PDF
-        let xPos = startX;
-        if (docStyles.textAlign === 'center' || isHeader) {
-          xPos = pageWidth / 2 - (docUrl.getStringUnitWidth(splitLine) * docStyles.fontSize / 2.83465) / 2; // Rough center
-        } else if (docStyles.textAlign === 'right') {
-           xPos = pageWidth - docStyles.marginRight - (docUrl.getStringUnitWidth(splitLine) * docStyles.fontSize / 2.83465);
-        }
-
-        docUrl.text(splitLine, xPos, cursorY, {
-            align: (docStyles.textAlign === 'justify' && !isHeader) ? 'justify' : 'left',
-            maxWidth: effectiveWidth
-        });
-        
-        cursorY += lineHeightMm;
-      });
-      
-      cursorY += lineHeightMm * 0.5; // Paragraph spacing
     });
 
     docUrl.save(`Contrato_Contabil_${form.company_razao_social.replace(/\s+/g, '_')}.pdf`);
-    toast.success("Contrato exportado para PDF!");
+    toast.success("Contrato exportado para PDF (versão simplificada)!");
   };
 
   const handleSave = async (redirect: boolean = false) => {
@@ -703,7 +787,7 @@ export function ContractGenerator({ onNavigate }: { onNavigate?: (tab: string) =
                       <TableCell className="text-sm font-light">{c.contract_value ? `R$ ${Number(c.contract_value).toLocaleString("pt-BR")}` : "—"}</TableCell>
                       <TableCell className="text-right">
                         <Button variant="ghost" size="sm" className="rounded-lg h-9" onClick={() => {
-                          setGeneratedContent(c.generated_content);
+                          setGeneratedContent(c.generated_content || "");
                           setDocStyles(c.style_config ? { ...DEFAULT_STYLES, ...c.style_config } : DEFAULT_STYLES);
                           setViewContract(c);
                           setStep(4);
@@ -985,155 +1069,138 @@ export function ContractGenerator({ onNavigate }: { onNavigate?: (tab: string) =
     );
   }
 
-  // Step 4: Generated & Customization (THE NEW PART)
+  const modules = useMemo(() => ({
+    toolbar: [
+      [{ 'header': [1, 2, 3, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      [{ 'align': [] }],
+      [{ 'size': ['small', false, 'large', 'huge'] }],
+      ['clean']
+    ]
+  }), []);
+
+  // Step 4: Generated & Customization (Rich Text Editor)
   return (
-    <div className="flex gap-6 h-[calc(100vh-150px)]">
-      {/* ── Left Panel: Customization Controls ───────────────────────────── */}
-      <Card className="w-80 flex-shrink-0 border-none shadow-xl rounded-[2rem] bg-white overflow-hidden flex flex-col">
-        <CardHeader className="px-6 py-6 bg-muted/20 border-b border-border/30">
-          <CardTitle className="text-lg font-light flex items-center gap-2">
-            <Settings2 className="h-5 w-5 text-primary" /> Personalizar
-          </CardTitle>
-          <CardDescription className="text-xs">Ajuste o visual do documento</CardDescription>
-        </CardHeader>
-        <ScrollArea className="flex-1 px-6 py-6">
-          <div className="space-y-8">
-            {/* Font Family */}
-            <div className="space-y-3">
-              <Label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">Tipografia</Label>
-              <Select value={docStyles.fontFamily} onValueChange={(v) => setDocStyles(s => ({ ...s, fontFamily: v }))}>
-                <SelectTrigger className="h-10 rounded-lg">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="serif">Serif (Times)</SelectItem>
-                  <SelectItem value="sans">Sans-serif (Arial)</SelectItem>
-                  <SelectItem value="mono">Monospace (Courier)</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Font Size */}
-            <div className="space-y-3">
-              <div className="flex justify-between">
-                <Label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">Tamanho</Label>
-                <span className="text-xs text-muted-foreground">{docStyles.fontSize}pt</span>
-              </div>
-              <Slider
-                value={[docStyles.fontSize]}
-                min={8} max={18} step={1}
-                onValueChange={([v]) => setDocStyles(s => ({ ...s, fontSize: v }))}
-                className="py-2"
-              />
-            </div>
-
-            {/* Line Height */}
-            <div className="space-y-3">
-              <div className="flex justify-between">
-                <Label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">Espaçamento</Label>
-                <span className="text-xs text-muted-foreground">{docStyles.lineHeight}x</span>
-              </div>
-              <Slider
-                value={[docStyles.lineHeight]}
-                min={1} max={2.5} step={0.1}
-                onValueChange={([v]) => setDocStyles(s => ({ ...s, lineHeight: v }))}
-                className="py-2"
-              />
-            </div>
-
-            {/* Text Align */}
-            <div className="space-y-3">
-              <Label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">Alinhamento</Label>
-              <ToggleGroup type="single" value={docStyles.textAlign} onValueChange={(v) => v && setDocStyles(s => ({ ...s, textAlign: v }))} className="justify-start">
-                <ToggleGroupItem value="left" aria-label="Left"><AlignLeft className="h-4 w-4" /></ToggleGroupItem>
-                <ToggleGroupItem value="center" aria-label="Center"><AlignCenter className="h-4 w-4" /></ToggleGroupItem>
-                <ToggleGroupItem value="justify" aria-label="Justify"><AlignJustify className="h-4 w-4" /></ToggleGroupItem>
-              </ToggleGroup>
-            </div>
-
-            {/* Margins */}
-            <div className="space-y-3">
-              <Label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">Margens (mm)</Label>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1">
-                  <span className="text-[10px] text-muted-foreground">Esq</span>
-                  <Input 
-                    type="number" 
-                    value={docStyles.marginLeft} 
-                    onChange={(e) => setDocStyles(s => ({...s, marginLeft: Number(e.target.value)}))}
-                    className="h-8 text-xs"
-                  />
-                </div>
-                <div className="space-y-1">
-                   <span className="text-[10px] text-muted-foreground">Dir</span>
-                  <Input 
-                    type="number" 
-                    value={docStyles.marginRight} 
-                    onChange={(e) => setDocStyles(s => ({...s, marginRight: Number(e.target.value)}))}
-                    className="h-8 text-xs"
-                  />
-                </div>
-              </div>
-            </div>
+    <div className="h-[calc(100vh-140px)] flex flex-col gap-4">
+      {/* ── Header: Actions & Page Settings ───────────────────────────── */}
+      <Card className="flex-shrink-0 border-none shadow-md bg-white px-6 py-3 flex items-center justify-between rounded-2xl">
+        <div className="flex items-center gap-4">
+          <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+            <FileText className="h-5 w-5" />
           </div>
-        </ScrollArea>
-        <div className="p-6 bg-muted/20 border-t border-border/30 space-y-3">
-           <Button variant="outline" className="w-full justify-start text-indigo-600 border-indigo-100 hover:bg-indigo-50" onClick={exportToWord}>
-             <FileDown className="h-4 w-4 mr-2" /> Baixar DOCX
-           </Button>
-           <Button variant="outline" className="w-full justify-start text-rose-600 border-rose-100 hover:bg-rose-50" onClick={exportToPDF}>
-             <Download className="h-4 w-4 mr-2" /> Baixar PDF
-           </Button>
-        </div>
-      </Card>
-
-      {/* ── Right Panel: Preview & Actions ───────────────────────────────── */}
-      <Card className="flex-1 border-none shadow-2xl rounded-[3rem] overflow-hidden bg-slate-100 flex flex-col">
-        <CardHeader className="px-8 py-6 bg-white border-b border-border/30 flex flex-row items-center justify-between shrink-0">
           <div>
-             <CardTitle className="text-xl font-light tracking-tight flex items-center gap-3">
-              <FileText className="h-6 w-6 text-primary" /> Visualização em Tempo Real
-            </CardTitle>
-            <CardDescription className="text-xs mt-1">O documento será exportado exatamente como visto abaixo</CardDescription>
+            <h2 className="text-lg font-medium tracking-tight">Editor de Contrato</h2>
+            <p className="text-xs text-muted-foreground">Edite o documento livremente como em um editor de texto</p>
           </div>
-          <div className="flex gap-2">
-            {viewContract ? (
+        </div>
+
+        <div className="flex items-center gap-2">
+           {/* Page Settings Popover */}
+           <Dialog>
+             <DialogTrigger asChild>
+               <Button variant="outline" size="sm" className="gap-2">
+                 <Settings2 className="h-4 w-4" /> Configurar Página
+               </Button>
+             </DialogTrigger>
+             <DialogContent>
+               <DialogHeader>
+                 <DialogTitle>Configuração de Página</DialogTitle>
+                 <DialogDescription>Defina as margens e a fonte padrão do documento.</DialogDescription>
+               </DialogHeader>
+               <div className="space-y-6 py-4">
+                 {/* Font Family */}
+                 <div className="space-y-3">
+                    <Label>Tipografia Padrão</Label>
+                    <Select value={docStyles.fontFamily} onValueChange={(v) => setDocStyles(s => ({ ...s, fontFamily: v }))}>
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="serif">Serif (Times)</SelectItem>
+                        <SelectItem value="sans">Sans-serif (Arial)</SelectItem>
+                        <SelectItem value="mono">Monospace (Courier)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  {/* Font Size */}
+                  <div className="space-y-3">
+                    <div className="flex justify-between">
+                      <Label>Tamanho Base</Label>
+                      <span className="text-xs text-muted-foreground">{docStyles.fontSize}pt</span>
+                    </div>
+                    <Slider value={[docStyles.fontSize]} min={8} max={18} step={1} onValueChange={([v]) => setDocStyles(s => ({ ...s, fontSize: v }))} />
+                  </div>
+                  {/* Line Height */}
+                  <div className="space-y-3">
+                    <div className="flex justify-between">
+                      <Label>Espaçamento entre linhas</Label>
+                      <span className="text-xs text-muted-foreground">{docStyles.lineHeight}x</span>
+                    </div>
+                    <Slider value={[docStyles.lineHeight]} min={1} max={2.5} step={0.1} onValueChange={([v]) => setDocStyles(s => ({ ...s, lineHeight: v }))} />
+                  </div>
+                  {/* Margins */}
+                  <div className="space-y-3">
+                    <Label>Margens (mm)</Label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="space-y-1"><span className="text-[10px]">Esq</span><Input type="number" value={docStyles.marginLeft} onChange={(e) => setDocStyles(s => ({...s, marginLeft: Number(e.target.value)}))} /></div>
+                      <div className="space-y-1"><span className="text-[10px]">Dir</span><Input type="number" value={docStyles.marginRight} onChange={(e) => setDocStyles(s => ({...s, marginRight: Number(e.target.value)}))} /></div>
+                      <div className="space-y-1"><span className="text-[10px]">Sup</span><Input type="number" value={docStyles.marginTop} onChange={(e) => setDocStyles(s => ({...s, marginTop: Number(e.target.value)}))} /></div>
+                      <div className="space-y-1"><span className="text-[10px]">Inf</span><Input type="number" value={docStyles.marginBottom} onChange={(e) => setDocStyles(s => ({...s, marginBottom: Number(e.target.value)}))} /></div>
+                    </div>
+                  </div>
+               </div>
+             </DialogContent>
+           </Dialog>
+
+           <div className="h-6 w-px bg-border mx-2" />
+
+           <Button variant="outline" size="sm" onClick={exportToWord} className="text-indigo-600 border-indigo-100 hover:bg-indigo-50">
+             <FileDown className="h-4 w-4 mr-2" /> DOCX
+           </Button>
+           <Button variant="outline" size="sm" onClick={exportToPDF} className="text-rose-600 border-rose-100 hover:bg-rose-50">
+             <Download className="h-4 w-4 mr-2" /> PDF
+           </Button>
+           
+           <div className="h-6 w-px bg-border mx-2" />
+
+           {viewContract ? (
               <Button variant="ghost" size="sm" onClick={() => { setStep(0); setViewContract(null); }}>Voltar</Button>
             ) : (
               <Button variant="ghost" size="sm" onClick={() => setStep(3)}>Editar Dados</Button>
             )}
 
             <Button onClick={() => handleSave(false)} size="sm" variant="ghost" className="text-muted-foreground">
-              <FileCheck className="h-4 w-4 mr-2" /> {viewContract ? "Salvar Alterações" : "Salvar Rascunho"}
+              <FileCheck className="h-4 w-4 mr-2" /> {viewContract ? "Salvar" : "Rascunho"}
             </Button>
             <Button onClick={() => handleSave(true)} size="sm" className="bg-primary text-white shadow-lg shadow-primary/20">
               <Send className="h-4 w-4 mr-2" /> {viewContract ? "Atualizar e Assinar" : "Salvar e Assinar"}
             </Button>
-          </div>
-        </CardHeader>
-        
-        <div className="flex-1 overflow-hidden p-8 flex justify-center bg-slate-100/50">
-          <div className="h-full w-full max-w-[210mm] bg-white shadow-2xl overflow-y-auto custom-scrollbar rounded-sm">
-             <div 
-               style={{
-                 fontFamily: getFontMap(docStyles.fontFamily).word,
-                 fontSize: `${docStyles.fontSize}pt`,
-                 lineHeight: docStyles.lineHeight,
-                 textAlign: docStyles.textAlign as any,
-                 paddingTop: `${docStyles.marginTop}mm`,
-                 paddingBottom: `${docStyles.marginBottom}mm`,
-                 paddingLeft: `${docStyles.marginLeft}mm`,
-                 paddingRight: `${docStyles.marginRight}mm`,
-                 whiteSpace: 'pre-wrap',
-                 color: 'black'
-               }}
-               className="min-h-full"
-             >
-               {generatedContent}
-             </div>
-          </div>
         </div>
       </Card>
+
+      {/* ── Editor Area ─────────────────────────────────────────────────── */}
+      <Card className="flex-1 border-none shadow-xl rounded-[2rem] overflow-hidden bg-white flex flex-col relative">
+         <ReactQuill 
+            theme="snow"
+            value={generatedContent || ""}
+            onChange={setGeneratedContent}
+            className="h-full flex flex-col ql-custom-container"
+            modules={modules}
+          />
+      </Card>
+      
+      {/* Global styles for Quill to fit full height */}
+      <style>{`
+        .ql-custom-container .ql-container {
+          flex: 1;
+          overflow-y: auto;
+          font-family: ${getFontMap(docStyles.fontFamily).word}, serif;
+          font-size: ${docStyles.fontSize}pt;
+        }
+        .ql-custom-container .ql-editor {
+          min-height: 100%;
+          padding: 2rem 3rem; /* Mimic page padding */
+        }
+      `}</style>
     </div>
   );
 }
