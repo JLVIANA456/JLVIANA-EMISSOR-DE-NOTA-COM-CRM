@@ -64,8 +64,8 @@ export default function SystemGuide() {
                     <p>Antes de iniciar os lançamentos, é crucial configurar o ambiente do cliente:</p>
                     <ul className="list-disc pl-4 space-y-1">
                       <li><strong>Cadastro de Pessoas:</strong> Vá em <em>Pessoas & DP</em> e cadastre o cliente como "Cliente" (PJ). Cadastre também os sócios.</li>
-                      <li><strong>Contas Bancárias:</strong> Em <em>Financeiro > Contas Bancárias</em>, cadastre todas as contas correntes e cartões de crédito. Defina o saldo inicial correto.</li>
-                      <li><strong>Centro de Custos & Categorias:</strong> Revise o plano de contas em <em>Geral > Categorias</em>. Adapte conforme a necessidade do cliente.</li>
+                      <li><strong>Contas Bancárias:</strong> Em <em>Financeiro &gt; Contas Bancárias</em>, cadastre todas as contas correntes e cartões de crédito. Defina o saldo inicial correto.</li>
+                      <li><strong>Centro de Custos & Categorias:</strong> Revise o plano de contas em <em>Geral &gt; Categorias</em>. Adapte conforme a necessidade do cliente.</li>
                     </ul>
                   </AccordionContent>
                 </AccordionItem>
@@ -84,7 +84,7 @@ export default function SystemGuide() {
                     <p>O coração do BPO. Deve ser feito diariamente ou conforme contrato:</p>
                     <ol className="list-decimal pl-4 space-y-2">
                       <li><strong>Verificar Extratos:</strong> Acesse o banco do cliente (ou use a integração automática se ativa).</li>
-                      <li><strong>Conciliação Bancária:</strong> Vá em <em>Financeiro > Conciliação</em>. O sistema tentará casar lançamentos com o extrato.
+                      <li><strong>Conciliação Bancária:</strong> Vá em <em>Financeiro &gt; Conciliação</em>. O sistema tentará casar lançamentos com o extrato.
                         <ul className="list-disc pl-4 mt-1 text-xs">
                           <li>Se o lançamento existe: <strong>Concilie</strong>.</li>
                           <li>Se não existe: Crie o lançamento diretamente na tela de conciliação.</li>
@@ -109,7 +109,7 @@ export default function SystemGuide() {
                   <AccordionContent className="pl-11 space-y-3 text-sm text-muted-foreground">
                     <p>Para clientes de serviço:</p>
                     <ul className="list-disc pl-4 space-y-1">
-                      <li>Acesse <em>Fiscal > Emissão de Notas</em>.</li>
+                      <li>Acesse <em>Fiscal &gt; Emissão de Notas</em>.</li>
                       <li>Selecione o cliente tomador (verifique se o cadastro está completo: CNPJ, Endereço).</li>
                       <li>Descreva o serviço e valores. O sistema calculará os impostos se configurado.</li>
                       <li>Clique em <strong>Emitir</strong>. A nota será enviada à prefeitura (integração via e-Notas ou manual).</li>
@@ -133,7 +133,7 @@ export default function SystemGuide() {
                     <ul className="list-disc pl-4 space-y-1">
                       <li><strong>Auditoria de Saldos:</strong> Verifique se o saldo final de cada conta no sistema bate exatamente com o extrato bancário.</li>
                       <li><strong>Categorização:</strong> Revise lançamentos "Sem Categoria" ou "Outros". Classifique corretamente para garantir relatórios precisos.</li>
-                      <li><strong>Relatórios CFO:</strong> Vá em <em>Financeiro > CFO Digital</em>.
+                      <li><strong>Relatórios CFO:</strong> Vá em <em>Financeiro &gt; CFO Digital</em>.
                         <ul className="list-disc pl-4 mt-1 text-xs">
                            <li>Gere o DRE (Demonstrativo de Resultado).</li>
                            <li>Analise o Fluxo de Caixa.</li>
