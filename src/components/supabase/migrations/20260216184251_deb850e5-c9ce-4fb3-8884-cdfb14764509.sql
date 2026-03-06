@@ -1,0 +1,1 @@
+ALTER TABLE public.revenue_projections ADD COLUMN is_mrr boolean NOT NULL DEFAULT false;

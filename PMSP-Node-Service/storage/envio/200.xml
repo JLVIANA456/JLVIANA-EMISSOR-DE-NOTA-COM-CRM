@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<p1:PedidoEnvioRPS xmlns:p1="http://www.prefeitura.sp.gov.br/nfe" Id="_0">
+  <Cabecalho Versao="1">
+    <CPFCNPJRemetente>
+      <CNPJ>53497516000150</CNPJ>
+    </CPFCNPJRemetente>
+  </Cabecalho>
+  <RPS>
+    <ChaveRPS>
+      <InscricaoPrestador>79512291</InscricaoPrestador>
+      <SerieRPS>AAAA</SerieRPS>
+      <NumeroRPS>200</NumeroRPS>
+    </ChaveRPS>
+    <TipoRPS>RPS</TipoRPS>
+    <DataEmissao>2026-03-04</DataEmissao>
+    <StatusRPS>N</StatusRPS>
+    <TributacaoRPS>T</TributacaoRPS>
+    <ValorServicos>1.00</ValorServicos>
+    <ValorDeducoes>0.00</ValorDeducoes>
+    <CodigoServico>02881</CodigoServico>
+    <AliquotaServicos>0.02</AliquotaServicos>
+    <ISSRetido>false</ISSRetido>
+    <CPFCNPJTomador>
+      <CPF>00000000000</CPF>
+    </CPFCNPJTomador>
+    <RazaoSocialTomador>CLIENTE TESTE</RazaoSocialTomador>
+    <EnderecoTomador>
+      <TipoLogradouro>R</TipoLogradouro>
+      <Logradouro>PRACA DA SE</Logradouro>
+      <NumeroEndereco>1</NumeroEndereco>
+      <Bairro>CENTRO</Bairro>
+      <Cidade>3550308</Cidade>
+      <UF>SP</UF>
+      <CEP>01001000</CEP>
+    </EnderecoTomador>
+    <EmailTomador>teste@email.com</EmailTomador>
+    <Discriminacao>TESTE DE EMISSAO DIRETO PELO SCRIPT</Discriminacao>
+  </RPS>
+<Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/><Reference URI="#_0"><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><DigestValue>TR4zLcOvTX7s0m5baiTPQXX5s7I=</DigestValue></Reference></SignedInfo><SignatureValue>FPGCwwwf/iTBY2bhNRdG2yWBlm/ztfkrEAyq4irOg5/4jrxmckKBeSsM/8dKL8PqtC13cfKJVsBOLVoO4Ral38FgkxGYz2iJJLQaYSIfA9D40I8aIWcMSRA1O7nhBFt+7bHokFwF5eSaQNE702Ramq4oRJQ6rAfVABvmx2H8pvDsCOfdL6CXXs7kyLav0YtMD9EeZN/Hkbf7rD77zMfiu21Z9xEGWpRLspIm6nGWFbi8RQolCrtMpozmepAElRnVTUiprjCZhWzecAq+Np84jzuThIdtHXAoE+nYlxe57QfWaVMsJaEmo8QjmUyaCVs+rEghVOP/pv9DQp3jUojizg==</SignatureValue><KeyInfo><X509Data><X509Certificate>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</X509Certificate></X509Data></KeyInfo></Signature></p1:PedidoEnvioRPS>

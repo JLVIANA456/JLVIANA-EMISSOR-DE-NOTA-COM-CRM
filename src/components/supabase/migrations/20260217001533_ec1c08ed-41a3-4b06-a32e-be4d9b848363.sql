@@ -1,0 +1,1 @@
+ALTER TABLE public.people ADD COLUMN contract_type text NOT NULL DEFAULT 'pj';

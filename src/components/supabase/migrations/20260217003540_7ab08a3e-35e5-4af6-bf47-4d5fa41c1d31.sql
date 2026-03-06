@@ -1,0 +1,1 @@
+ALTER TABLE public.revenue_projections ADD COLUMN color text DEFAULT null;

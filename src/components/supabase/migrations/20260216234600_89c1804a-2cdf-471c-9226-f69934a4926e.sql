@@ -1,0 +1,1 @@
+ALTER TYPE public.revenue_type ADD VALUE IF NOT EXISTS 'vagas';

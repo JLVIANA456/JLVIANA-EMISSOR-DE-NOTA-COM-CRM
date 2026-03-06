@@ -1,0 +1,1 @@
+ALTER TABLE public.payroll_items ADD COLUMN holerite_emitido boolean NOT NULL DEFAULT false;

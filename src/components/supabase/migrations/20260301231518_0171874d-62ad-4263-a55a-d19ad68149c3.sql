@@ -1,0 +1,1 @@
+ALTER TABLE public.contracts ADD COLUMN salary_adjustment_id UUID REFERENCES public.salary_adjustments(id) ON DELETE SET NULL;
