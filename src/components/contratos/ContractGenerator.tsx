@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
-import { Loader2, Sparkles, FileText, Plus, Eye, Brain, FileCheck, Search, AlertTriangle, FileDown, Download, Settings2, AlignLeft, AlignCenter, AlignJustify, Type } from "lucide-react";
+import { Loader2, Sparkles, FileText, Plus, Eye, Brain, FileCheck, Search, AlertTriangle, FileDown, Download, Settings2, AlignLeft, AlignCenter, AlignJustify, Type, Send } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Slider } from "@/components/ui/slider";
@@ -311,6 +311,17 @@ function valorPorExtenso(valorStr: string): string {
   return reaisStr ? `${reaisStr} ${reaisLabel}` : "";
 }
 
+const DEFAULT_STYLES = {
+  fontFamily: "serif",
+  fontSize: 12,
+  lineHeight: 1.5,
+  textAlign: "justify",
+  marginTop: 25,
+  marginBottom: 25,
+  marginLeft: 30,
+  marginRight: 20,
+};
+
 export function ContractGenerator({ onNavigate }: { onNavigate?: (tab: string) => void }) {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -322,16 +333,7 @@ export function ContractGenerator({ onNavigate }: { onNavigate?: (tab: string) =
   const [viewContract, setViewContract] = useState<any>(null);
 
   // Styling State
-  const [docStyles, setDocStyles] = useState({
-    fontFamily: "serif", // serif | sans | mono
-    fontSize: 12,
-    lineHeight: 1.5,
-    textAlign: "justify", // left | center | justify
-    marginTop: 25,
-    marginBottom: 25,
-    marginLeft: 30,
-    marginRight: 20,
-  });
+  const [docStyles, setDocStyles] = useState(DEFAULT_STYLES);
 
   const consultCNPJ = async (targetCnpj: string) => {
     const cleanCnpj = targetCnpj.replace(/\D/g, "");
@@ -600,37 +602,49 @@ export function ContractGenerator({ onNavigate }: { onNavigate?: (tab: string) =
   const handleSave = async (redirect: boolean = false) => {
     if (!user) return;
     try {
-      const { error } = await supabase.from("contracts").insert({
-        user_id: user.id,
-        template_id: form.template_id || null,
-        category: form.category as any,
-        contract_type: form.contract_type as any,
-        title: form.title,
-        company_cnpj: form.company_cnpj, company_razao_social: form.company_razao_social,
-        company_nome_fantasia: form.company_nome_fantasia, company_address: form.company_address,
-        company_representative: form.company_representative, company_representative_cpf: form.company_representative_cpf,
-        company_representative_role: form.company_representative_role,
-        contractor_cnpj: form.contractor_cnpj, contractor_razao_social: form.contractor_razao_social,
-        contractor_address: form.contractor_address, contractor_representative: form.contractor_representative,
-        contractor_representative_cpf: form.contractor_representative_cpf,
-        contract_value: parseFloat(form.contract_value) || 0,
-        payment_method: form.payment_method,
-        contract_duration: form.contract_duration, start_date: form.start_date || null, end_date: form.end_date || null,
-        scope_summary: form.scope_summary, termination_penalty: parseFloat(form.termination_penalty) || 0,
-        has_confidentiality: form.has_confidentiality, has_intellectual_property: form.has_intellectual_property,
-        has_exclusivity: form.has_exclusivity,
-        generated_content: generatedContent,
-        status: "rascunho" as any,
-        style_config: docStyles as any,
-      });
-      if (error) throw error;
+      if (viewContract) {
+        const { error } = await supabase
+          .from("contracts")
+          .update({
+            style_config: docStyles as any,
+          })
+          .eq("id", viewContract.id);
+
+        if (error) throw error;
+        toast.success("Contrato atualizado!");
+      } else {
+        const { error } = await supabase.from("contracts").insert({
+          user_id: user.id,
+          template_id: form.template_id || null,
+          category: form.category as any,
+          contract_type: form.contract_type as any,
+          title: form.title,
+          company_cnpj: form.company_cnpj, company_razao_social: form.company_razao_social,
+          company_nome_fantasia: form.company_nome_fantasia, company_address: form.company_address,
+          company_representative: form.company_representative, company_representative_cpf: form.company_representative_cpf,
+          company_representative_role: form.company_representative_role,
+          contractor_cnpj: form.contractor_cnpj, contractor_razao_social: form.contractor_razao_social,
+          contractor_address: form.contractor_address, contractor_representative: form.contractor_representative,
+          contractor_representative_cpf: form.contractor_representative_cpf,
+          contract_value: parseFloat(form.contract_value) || 0,
+          payment_method: form.payment_method,
+          contract_duration: form.contract_duration, start_date: form.start_date || null, end_date: form.end_date || null,
+          scope_summary: form.scope_summary, termination_penalty: parseFloat(form.termination_penalty) || 0,
+          has_confidentiality: form.has_confidentiality, has_intellectual_property: form.has_intellectual_property,
+          has_exclusivity: form.has_exclusivity,
+          generated_content: generatedContent,
+          status: "rascunho" as any,
+          style_config: docStyles as any,
+        });
+        if (error) throw error;
+        toast.success("Contrato salvo!");
+      }
 
       queryClient.invalidateQueries({ queryKey: ["contracts"] });
-      toast.success("Contrato salvo!");
       
       if (redirect && onNavigate) {
         onNavigate("assinatura");
-      } else {
+      } else if (!viewContract) {
         setStep(0);
         setForm(emptyForm);
         setGeneratedContent("");
@@ -690,8 +704,9 @@ export function ContractGenerator({ onNavigate }: { onNavigate?: (tab: string) =
                       <TableCell className="text-right">
                         <Button variant="ghost" size="sm" className="rounded-lg h-9" onClick={() => {
                           setGeneratedContent(c.generated_content);
+                          setDocStyles(c.style_config ? { ...DEFAULT_STYLES, ...c.style_config } : DEFAULT_STYLES);
+                          setViewContract(c);
                           setStep(4);
-                          // We might want to load existing styles if saved, but for now default
                         }}>
                           <Eye className="h-4 w-4 mr-1" /> Ver / Editar
                         </Button>
@@ -1082,19 +1097,18 @@ export function ContractGenerator({ onNavigate }: { onNavigate?: (tab: string) =
             <CardDescription className="text-xs mt-1">O documento será exportado exatamente como visto abaixo</CardDescription>
           </div>
           <div className="flex gap-2">
-            {!viewContract && <Button variant="ghost" size="sm" onClick={() => setStep(3)}>Editar Dados</Button>}
             {viewContract ? (
               <Button variant="ghost" size="sm" onClick={() => { setStep(0); setViewContract(null); }}>Voltar</Button>
             ) : (
-              <>
-                <Button onClick={() => handleSave(false)} size="sm" variant="ghost" className="text-muted-foreground">
-                  <FileCheck className="h-4 w-4 mr-2" /> Salvar Rascunho
-                </Button>
-                <Button onClick={() => handleSave(true)} size="sm" className="bg-primary text-white shadow-lg shadow-primary/20">
-                  <Send className="h-4 w-4 mr-2" /> Salvar e Assinar
-                </Button>
-              </>
+              <Button variant="ghost" size="sm" onClick={() => setStep(3)}>Editar Dados</Button>
             )}
+
+            <Button onClick={() => handleSave(false)} size="sm" variant="ghost" className="text-muted-foreground">
+              <FileCheck className="h-4 w-4 mr-2" /> {viewContract ? "Salvar Alterações" : "Salvar Rascunho"}
+            </Button>
+            <Button onClick={() => handleSave(true)} size="sm" className="bg-primary text-white shadow-lg shadow-primary/20">
+              <Send className="h-4 w-4 mr-2" /> {viewContract ? "Atualizar e Assinar" : "Salvar e Assinar"}
+            </Button>
           </div>
         </CardHeader>
         
