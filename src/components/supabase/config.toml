@@ -1,0 +1,28 @@
+project_id = "bgimhaccqfkkwpqhtfwb"
+
+[functions.granatum]
+verify_jwt = false
+
+[functions.granatum-sync]
+verify_jwt = false
+
+[functions.notify-invoice]
+verify_jwt = false
+
+[functions.validate-nf]
+verify_jwt = false
+
+[functions.create-pj-account]
+verify_jwt = false
+
+[functions.generate-contract]
+verify_jwt = false
+
+[functions.legal-assistant]
+verify_jwt = false
+
+[functions.analyze-contract]
+verify_jwt = false
+
+[functions.clicksign-integration]
+verify_jwt = false

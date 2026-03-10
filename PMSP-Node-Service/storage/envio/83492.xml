@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<p1:PedidoEnvioRPS xmlns:p1="http://www.prefeitura.sp.gov.br/nfe" Id="_0">
+  <Cabecalho Versao="2">
+    <CPFCNPJRemetente>
+      <CNPJ>53497516000150</CNPJ>
+    </CPFCNPJRemetente>
+  </Cabecalho>
+  <RPS>
+    <Assinatura>IQUWbnjWhGlXajhYAHJzV45nfenlNb964nMpZN9LZ00ehjkSKqkkeMsXKfKzwaD5PVwbimjxdxhtCBpp3OpWuxs1v9a8CCSmf+LVeqkk4lOvul0FCjJz1g6TpiHUhhOlcHoVKKHac83q5AwME1RM+EnDo2CWsNlkyRnzBczoc3bgHoBAxRiXHhTyT2DBwDzb8qY9WuI2Sw/7AbCl7/GM0YiigErjX2UlC/vhgonefGL+r3HXTAPD6If5/gMltFP</Assinatura>
+    <ChaveRPS>
+      <InscricaoPrestador>79512291</InscricaoPrestador>
+      <SerieRPS>1</SerieRPS>
+      <NumeroRPS>83492</NumeroRPS>
+    </ChaveRPS>
+    <TipoRPS>1</TipoRPS>
+    <DataEmissao>2026-03-09</DataEmissao>
+    <StatusRPS>1</StatusRPS>
+    <TributacaoRPS>1</TributacaoRPS>
+    <ValorServicos>5.00</ValorServicos>
+    <ValorDeducoes>0.00</ValorDeducoes>
+    <ValorPIS>0.00</ValorPIS>
+    <ValorCOFINS>0.00</ValorCOFINS>
+    <ValorINSS>0.00</ValorINSS>
+    <ValorIR>0.00</ValorIR>
+    <ValorCSLL>0.00</ValorCSLL>
+    <CodigoServico>05762</CodigoServico>
+    <AliquotaServicos>0.02</AliquotaServicos>
+    <ISSRetido>0</ISSRetido>
+    <CPFCNPJTomador>
+      <CNPJ>07203780000116</CNPJ>
+    </CPFCNPJTomador>
+    <RazaoSocialTomador>JEFFERSON LOPES VIANA</RazaoSocialTomador>
+    <EnderecoTomador>
+      <Logradouro>DOS HELIOTROPIOS</Logradouro>
+      <NumeroEndereco>95</NumeroEndereco>
+      <Bairro>MIRANDOPOLIS</Bairro>
+      <Cidade>SAO PAULO</Cidade>
+      <UF>SP</UF>
+      <CEP>04049000</CEP>
+    </EnderecoTomador>
+    <EmailTomador>CONTABILIDADE@JLVIANA.COM.BR</EmailTomador>
+    <Discriminacao>Instrução</Discriminacao>
+    <ValorIPI>0.00</ValorIPI>
+    <ExigibilidadeSuspensa>0</ExigibilidadeSuspensa>
+    <PagamentoParceladoAntecipado>0</PagamentoParceladoAntecipado>
+    <NBS>1.01</NBS>
+    <cLocPrestacao>3550308</cLocPrestacao>
+    <IBSCBS>
+      <finNFSe>0</finNFSe>
+      <indFinal>0</indFinal>
+      <cIndOp>1001</cIndOp>
+      <tpOper>1</tpOper>
+      <indDest>0</indDest>
+      <valores>
+        <trib>
+          <cClassTrib>1001</cClassTrib>
+          <cClassTribReg>1001</cClassTribReg>
+        </trib>
+      </valores>
+    </IBSCBS>
+  </RPS>
+<Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/><Reference URI="#_0"><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><DigestValue>6Gpgm+ooUbatR1phLr2dI+nnU94=</DigestValue></Reference></SignedInfo><SignatureValue>SD8L5kmRDGSDDDCPL8JLO4Bx14EZ9jCFjeqEsltsHi6Ach/7aFYUAJSKIj3SjNEyM3kPPrpsKA6pGzvve5PSbJ/o7UhEF2SDsJDG+MNLcq+bKsWvrrmumkbQdp59UnN3RbGTqPE0ndqix/awwOpRfUZwMgVHDSeTnfn1l7n7kJjQvuLwWrP8a3THoVywSz91soBRJTrOM0FGaRwdhuviBQ0X+8prDCDkNZ1J1Uik0yYKPnLIWpsKyQ6xIxHupIxkOOEBqw3mPSVyoHTV80ylqkns7wB52J2Z4didGAubtdxX3jlAn5XwcM9y2PeQrYpetLJRqZ4laL04vArQLlrBBA==</SignatureValue><KeyInfo><X509Data><X509Certificate>MIIH9jCCBd6gAwIBAgIISjg+5PcTvJ0wDQYJKoZIhvcNAQELBQAwdjELMAkGA1UEBhMCQlIxEzARBgNVBAoTCklDUC1CcmFzaWwxNjA0BgNVBAsTLVNlY3JldGFyaWEgZGEgUmVjZWl0YSBGZWRlcmFsIGRvIEJyYXNpbCAtIFJGQjEaMBgGA1UEAxMRQUMgU0FGRVdFQiBSRkIgdjUwHhcNMjYwMTI5MTkyMjEzWhcNMjcwMTI5MTkyMjEzWjCB/TELMAkGA1UEBhMCQlIxEzARBgNVBAoTCklDUC1CcmFzaWwxCzAJBgNVBAgTAlNQMRIwEAYDVQQHEwlTQU8gUEFVTE8xNjA0BgNVBAsTLVNlY3JldGFyaWEgZGEgUmVjZWl0YSBGZWRlcmFsIGRvIEJyYXNpbCAtIFJGQjEWMBQGA1UECxMNUkZCIGUtQ05QSiBBMTEXMBUGA1UECxMOMTE1ODc5NzUwMDAxODQxGTAXBgNVBAsTEHZpZGVvY29uZmVyZW5jaWExNDAyBgNVBAMTK0tDIE1FTlRPUklBIEVNUFJFU0FSSUFMIExUREE6NTM0OTc1MTYwMDAxNTAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC0578+H59K2HZL9EY1UMFWkSeTYhVMXWw+5L5FUP1lgEAKa8vDJUZgCxlkKrgA4L2reRk/ThrPI9GBZFGjGLxrLbZIYAio6+I03felkYnnTeSNZKakFnfXhak4elq/e5wVJ/LqiYG7ejgEvjnm8wdG9+4DEWOC6OORRxldDboT0y9hCLXCXCpJ6pdUH7Hz66EDrKlJGGhDPir86v9cQ+REjfGJfB6av2AA+mEQj55OUqmNfNbZvT/9FnCTnow6xkuP62ccssChbg8+EHRBBqAnUEMWmDtc8/CvNaqQI2gRHTefI9M6oVIGVarL0zUE7R5bPZ6FJxT6oROtjpkewzy1AgMBAAGjggL+MIIC+jAfBgNVHSMEGDAWgBQpXkvVRky7/hanY8EdxCby3djzBTAOBgNVHQ8BAf8EBAMCBeAwaQYDVR0gBGIwYDBeBgZgTAECATMwVDBSBggrBgEFBQcCARZGaHR0cDovL3JlcG9zaXRvcmlvLmFjc2FmZXdlYi5jb20uYnIvYWMtc2FmZXdlYnJmYi9kcGMtYWNzYWZld2VicmZiLnBkZjCBrgYDVR0fBIGmMIGjME+gTaBLhklodHRwOi8vcmVwb3NpdG9yaW8uYWNzYWZld2ViLmNvbS5ici9hYy1zYWZld2VicmZiL2xjci1hYy1zYWZld2VicmZidjUuY3JsMFCgTqBMhkpodHRwOi8vcmVwb3NpdG9yaW8yLmFjc2FmZXdlYi5jb20uYnIvYWMtc2FmZXdlYnJmYi9sY3ItYWMtc2FmZXdlYnJmYnY1LmNybDCBtwYIKwYBBQUHAQEEgaowgacwUQYIKwYBBQUHMAKGRWh0dHA6Ly9yZXBvc2l0b3Jpby5hY3NhZmV3ZWIuY29tLmJyL2FjLXNhZmV3ZWJyZmIvYWMtc2FmZXdlYnJmYnY1LnA3YjBSBggrBgEFBQcwAoZGaHR0cDovL3JlcG9zaXRvcmlvMi5hY3NhZmV3ZWIuY29tLmJyL2FjLXNhZmV3ZWJyZmIvYWMtc2FmZXdlYnJmYnY1LnA3YjCBxgYDVR0RBIG+MIG7gR1LQVJFTi5DQVJUQUdFTkFAREVDT0RJTkdQLkNPTaAsBgVgTAEDAqAjEyFLQVJFTiBKVUxMSUVUIENBUlRBR0VOQSBST0RSSUdVRVqgGQYFYEwBAwOgEBMONTM0OTc1MTYwMDAxNTCgOAYFYEwBAwSgLxMtMjgxMTE5ODkyMzgwNzE4Njg3NTAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwoBcGBWBMAQMHoA4TDDAwMDAwMDAwMDAwMDAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwCQYDVR0TBAIwADANBgkqhkiG9w0BAQsFAAOCAgEAj62KPlbcvlE/v4xcOlUHwIVJ5C7xVg7sS+Jo27IoOIp7pqkG8xsGAl5rC5LXTmtbfy+nn25vGVqpE4p15eWjhgPe0VWaQDkbc3XDhiGCUClfhBbXND+c/wdV7BRrzL6seuGX1SSbHjsTX2Xymx+lo629nZZFnRdkQ7VXEI1sNtxT8oK8hd5hzVPNObwxP5vqIrXPxamRzGmlHQhCNZ/IsRkAcl+odaetVQdNx4BJ/npKM3gOJa/X0/1r8zD1G7cDSotMTyvHR5tzkAywKcetkD8HdkWJFGrOan+BK7Hrtup2qUNDLoGdtOTFBrLt9IdqdVtyYp2ELxIA1g/Baz63j60nQOOJqWCAt7LAgzqkUle4OnYNzru58j3y4yJRirB64TDltupAF0X9xWt7SS9HTufeeiuEJfjNx+U+JfjENmJfRS4w44uzpt3DuwZVCESdS+HKmKzZQX8wr0FMquKgVrWQ9tO4tCb60RLqgm2ocAuhIc5uT8SdTggETP0MYU4/iLowdzRxxv2UvOJGv9s4CqJ/buAWlqqxB5ekQo6E8VwyZao3d9Jl0sRwGEv6plZsC9AIoV1MeCV1RYgPatgL+bJVn1nhug0GE19c3guLNOYXXRC061n7Z8OOF8paO3wNfr/cZJlLNPtzvZUCd6WA/+/pr6hxGEII58/KbZqwELA=</X509Certificate></X509Data></KeyInfo></Signature></p1:PedidoEnvioRPS>

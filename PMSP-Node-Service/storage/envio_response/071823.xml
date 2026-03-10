@@ -1,0 +1,287 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="ctl00_Head1"><meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" /><title>
+	Nota Fiscal Eletrônica
+</title><script type="text/javascript" src="/ruxitagentjs_ICA7NVfghqrux_10331260218130851.js" data-dtconfig="rid=RID_77751562|rpid=-1809682552|domain=sp.gov.br|reportUrl=/rb_bf25627nfc|app=db66c4a801656e04|owasp=1|featureHash=ICA7NVfghqrux|srsr=10000|rdnt=1|uxrgce=1|cuc=1kl9mogn|mel=100000|dpvc=1|md=mdcc1=a.saudacao|lastModification=1771839439804|tp=500,50,0|srbbv=2|agentUri=/ruxitagentjs_ICA7NVfghqrux_10331260218130851.js"></script><link rel="stylesheet" type="text/css" href="nfe.css?v=1.1" /><link rel="stylesheet" type="text/css" href="portal/css/ndefault.css" /><link rel="stylesheet" type="text/css" href="portal/css/nbarra.css" /><link rel="stylesheet" type="text/css" href="portal/css/menu.css?v=1.1" /><link rel="stylesheet" type="text/css" href="webparts/padrao.css?v=1.1" /><link rel="stylesheet" type="text/css" href="webparts/shared/login/css/wplogin.css?v=1.1" /><link href="https://fonts.googleapis.com/css?family=Fira+Sans:400,500,700" rel="stylesheet" type="text/css" /><link rel="icon" href="./favicon.ico" /><link rel="stylesheet" type="text/css" href="https://cav.prefeitura.sp.gov.br/cdn/cav-vue@0.0.1/style.css?k=9b5067a1f5904012901ee011a5cc2112"/><link rel="stylesheet" type="text/css" href="/shared/NotificationBell.css?k=d829070b98e048079833b438959f42ed"/><link rel="stylesheet" type="text/css" href="/shared/oauth2logout.css"/><link rel="stylesheet" type="text/css" href="/shared/headerv2.css"/></head>
+<body>
+    
+
+<header class="header-v2">
+    <div class="header-v2__container">
+        <div class="header-v2__logo">
+            
+            <img src="/assets/img/logo-nfe.png" alt="logo-nfe"/>
+        </div>
+        <div class="header-v2__version">
+            <p>
+                202602261303
+            </p>
+        </div>
+        <div class="header-v2__login">
+            
+<div class="cav-container">
+    <div id="cav"></div>
+</div>
+
+            
+            
+
+<div class="oauth-logout  oauth--light oauth--medium">
+    <div class="oauth-identifier">
+        <div class="oauth-name"></div>
+        <div class="oauth-date" title="Data do seu último acesso.">Acessou em </div>
+    </div>
+    <button onclick="__doPostBack('ctl00$HeaderV2$oauthLogout$Sair','')" id="ctl00_HeaderV2_oauthLogout_Sair" class="oauth-sair" title="Clique para sair do sistema">
+        <i class="oauth-icon">
+            
+            
+            <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <mask id="mask0_1_7" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="32" height="32">
+                    <rect width="32" height="32" fill="#D9D9D9"/>
+                </mask>
+                <g mask="url(#mask0_1_7)">
+                    <path d="M6.66667 28C5.93333 28 5.30556 27.7389 4.78333 27.2167C4.26111 26.6944 4 26.0667 4 25.3333V6.66667C4 5.93333 4.26111 5.30556 4.78333 4.78333C5.30556 4.26111 5.93333 4 6.66667 4H16V6.66667H6.66667V25.3333H16V28H6.66667ZM21.3333 22.6667L19.5 20.7333L22.9 17.3333H12V14.6667H22.9L19.5 11.2667L21.3333 9.33333L28 16L21.3333 22.6667Z" fill="#012759"/>
+                </g>
+            </svg>
+        </i>
+        <span>Sair</span>
+    </button>
+</div>
+
+        </div>
+    </div>
+</header>
+    <div class="pagina-mestre">
+        <form name="aspnetForm" method="post" action="./pagenotfound.aspx?aspxerrorpath=%2fws%2flotenfev2.asmx" id="aspnetForm" style="margin: 0px; padding: 0px;">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="lF46rDoEqBovGlGm20l0MfFlvwPbFW51DrrCLwqwoyA2XRTL80fYlsCUIDNua78fcCMNVQJ5EJKccqA3fA2JzQz2BIIR3Dluv1zdACmfBtoBxdOn2FWzuGHmr3TroTipp2BBaAZbKAa4F0yjaik2KpaFczb+arB8w95nRHSEcZgpA4FZkLh9rqUn3zqb7ISJ6cfYIVCPaR7dXWpz7X9TOd/djoJze1oKsbIZSwnGE90iOxyn4LOr+99FMIC4DB9PszlJJoLNBsryAXR40lwHCncRMEqw6aTvTFFZigoNcRhvZz6zcP+gApPpPkHRRQv1APys3oSbrbghxJg24cRXWidgTS9X5YfWU20XHOES7CgICx3wbwPd/jGUScn4b/UMHPBzc4K/742TQGxIvoudhL5vJo6c52At9/QT+461zQ2nksn4M8q0CnB38ZhR555iioAIkrdvrsCkZza2AP1TZ4UXS9IKLjHwTnaQreWlHmBLGFni1voGvwMp87xnWyCEo/fW44Ssp9DdFJiyix9y1dx/sSmg0B+SGZyJTty1j9T2xEknX6E3BCNZMAjah/IRmwBRzZfoR3N4MAYWmG/6qkz327dp1bTL86F8B5iLjkjzkROkG1Xhdz8l1Y3m5c8E5VMqjHxesMlDVMp45TDVSlhMW1Bw4AUS5YyUWlAaSCSwasYdrM9LjuVPojYVuwgQLoWFlI35IrLE6khq/ZTMZvCud54R++DGQ6UYauzrOp3ML3VbxKbLeeqNn7so0lU7UkgNOuEbn/CnS5XQynCnHZF+GBToitqt0RaZqKwo79xfe4pMUAUotJ1qumu58FC64LBXG30cy3YoAPb1rUHtYyGw6XNWqaAIISyD/AQSmHh3hX8lN9frC+3ZmWiT+ZoM8JPUFzzkZjy+PEmayaU365fjIm0x31c+S7npyBHSAXEChaywZ1zDtkBAlH4YUhCLRt7DS2C416bWe4bIFwldas4VABpUUk8YHMID+RjkxQks4Xj/Wv7D12dTdJ5CP0VbrZuu0ZcHOYa388RlGzS4q7ag/XAGe+m56SRNSkC0I9Q7cI1mD1MCWRl4nCwYJ19rl+dx3USkiTFzPjWysaBLVReEIrw3s3yaOaJBPK8VmHwngtX81u5DljiNVwD9OlB6cnRCNvpmug9CbWiOpdpRHAT9WFg=" />
+
+
+<script src="/WebResource.axd?d=btGBgULKnBPdDqUdf-V-FajlD_MtWGtPJNeZ7PI8lauyhbVyygcXLNvex_e4FQNVV5dCSw2&amp;t=638285957964787378" type="text/javascript"></script>
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="510B8B35" />
+<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="ZSqiAZdxLEdK0bR9sUbKxQXs9xoqcovo2CD1SIRCYNwelWEaccmq+vb/r/4EfS1wvwc9RJEsXJn4jctifn6/gGEXJRWyxsN98nB3pfBQC/wMXzIV" />
+
+            <div class="container" style="border: 1px solid #CCC">
+               
+
+             
+
+
+                <div class="corpo-master">
+                    <div class="menu-lateral">
+                        
+<style type="text/css" media="screen">
+    @import url(/portal/css/menu.css?v=1.1)
+</style>
+
+<!--=================== menu lateral ambiente restrito - copie o css acima ============== -->
+<div class="menu" style="">
+    <div class="ambiente-restrito_r1_c1">
+        <div style=" width: 198px; height: 45px; border-width: 2px; background-color: #012759; color: white; border-radius: 3px; display: flex; justify-content: center; align-items: center; font-family: 'Arial', sans-serif; font-weight: bold;font-size: 15px;">
+            AMBIENTE RESTRITO
+        </div>
+        <div class="contents">
+            <!-- apenas adicione itens de menu como os abaixo 
+            <a href="#">Início</a> <a href="#">Alterar E-mail/ Senha</a> <a href="#">Histórico de Acessos</a> <a href="#">item1</a>
+            <a href="#">item2</a> <a href="#">item3</a> <a href="#">item3</a> <a href="#">item3</a><a href="#"> item3</a>
+            -->
+
+            <a href="#ctl00_wpMenuLateral_mnuRotinas_SkipLink"><img alt="Skip Navigation Links" src="/WebResource.axd?d=rKN1opQVoh180LaGjXZZkKDD6JvgBBazXlhBynIzllZ-J1nlQFeu25twd0-hgdGCQDuFJA2&amp;t=638285957964787378" width="0" height="0" border="0" /></a><table id="ctl00_wpMenuLateral_mnuRotinas" class="menu" cellpadding="0" cellspacing="0" border="0">
+	<tr onmouseover="Menu_HoverStatic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(event)" id="ctl00_wpMenuLateral_mnuRotinasn0">
+		<td><table class="menuItem1" cellpadding="0" cellspacing="0" border="0" width="100%">
+			<tr>
+				<td nowrap="nowrap" width="100%"><a class="menuItem1" href="login.aspx">Acesso ao Sistema</a></td>
+			</tr>
+		</table></td>
+	</tr><tr onmouseover="Menu_HoverStatic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(event)" id="ctl00_wpMenuLateral_mnuRotinasn1">
+		<td><table class="menuItem1" cellpadding="0" cellspacing="0" border="0" width="100%">
+			<tr>
+				<td nowrap="nowrap" width="100%"><a class="menuItem1" href="cadastro.aspx">Cadastre sua Senha</a></td>
+			</tr>
+		</table></td>
+	</tr><tr onmouseover="Menu_HoverStatic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(event)" id="ctl00_wpMenuLateral_mnuRotinasn2">
+		<td><table class="menuItem1" cellpadding="0" cellspacing="0" border="0" width="100%">
+			<tr>
+				<td nowrap="nowrap" width="100%"><a class="menuItem1" href="login.aspx?tipo=consulta">Consulta de Créditos</a></td>
+			</tr>
+		</table></td>
+	</tr><tr onmouseover="Menu_HoverStatic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(event)" id="ctl00_wpMenuLateral_mnuRotinasn3">
+		<td><table class="menuItem1" cellpadding="0" cellspacing="0" border="0" width="100%">
+			<tr>
+				<td nowrap="nowrap" width="100%"><a class="menuItem1" href="login.aspx?tipo=nota">Emissão de NFS-e</a></td>
+			</tr>
+		</table></td>
+	</tr><tr onmouseover="Menu_HoverStatic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(event)" id="ctl00_wpMenuLateral_mnuRotinasn4">
+		<td><table class="menuItem1" cellpadding="0" cellspacing="0" border="0" width="100%">
+			<tr>
+				<td nowrap="nowrap" width="100%"><a class="menuItem1" href="login.aspx?tipo=guia">Guia de Pagamento</a></td>
+			</tr>
+		</table></td>
+	</tr><tr onmouseover="Menu_HoverStatic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(event)" id="ctl00_wpMenuLateral_mnuRotinasn5">
+		<td><table class="menuItem1" cellpadding="0" cellspacing="0" border="0" width="100%">
+			<tr>
+				<td nowrap="nowrap" width="100%"><a class="menuItem1" href="login.aspx?tipo=contador">Contador</a></td>
+			</tr>
+		</table></td>
+	</tr><tr onmouseover="Menu_HoverStatic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(event)" id="ctl00_wpMenuLateral_mnuRotinasn6">
+		<td><table class="menuItem1" cellpadding="0" cellspacing="0" border="0" width="100%">
+			<tr>
+				<td nowrap="nowrap" width="100%"><a class="menuItem1" href="rps.aspx">Consulta de RPS</a></td>
+			</tr>
+		</table></td>
+	</tr>
+</table><a id="ctl00_wpMenuLateral_mnuRotinas_SkipLink"></a>
+            <!--            
+            <StaticMenuStyle CssClass="menu" />
+            <StaticMenuItemStyle CssClass="menuItem" />
+            <StaticSelectedStyle CssClass="menuSelected" BackColor="" />
+            <DynamicMenuStyle CssClass="submenu" />
+            <DynamicSelectedStyle CssClass="submenuSelected" />
+            <DynamicMenuItemStyle CssClass="submenuItem" />
+            -->
+        </div>
+        <div class="ambiente-restrito_r3_c1" style="height: 43px; display: block; border: 0px solid; margin-right: 6px; margin-top: -4px">&nbsp;</div>
+    </div>
+</div>
+
+<div style="background-color: #fff; height: 20px;"></div>
+
+
+<table id="ctl00_wpMenuLateral_Table_Cab" cellspacing="0" cellpadding="0" border="0">
+	<tr>
+		<td valign="top" align="left" class="" style="width: 181px; background-color: #fff">
+            <div id="ctl00_wpMenuLateral_Panel1" align="center">
+			
+                <a href="/shared/capa.aspx"></a>
+            
+		</div>
+
+            <!-- Here Was the Old Menu -->
+
+
+            <br />
+            <center>
+                
+
+                <br />
+
+            </center>
+        </td>
+		<td style="width: 10px;"></td>
+	</tr>
+</table>
+
+
+                    </div>
+
+                    <div class="corpo-pagina">
+                        
+	<br />
+    <h1 align="center">
+        Nota Fiscal de Serviços Eletrônica
+    </h1>
+	<table class="table" id="Table1" cellspacing="1" cellpadding="1" width="500" border="0">
+		<tr>
+			<td class="tableHeader">
+				PÁGINA NÃO ENCONTRADA
+			</td>
+		</tr>
+		<tr>
+			<td class="tableItem" style="HEIGHT: 66px">
+				<p style="text-align: justify">
+				    <font size="2">
+				        A página especificada
+					    <span id="ctl00_cphCabMenu_lblPage" class="labelMessage">/ws/lotenfev2.asmx</span>
+					    não foi encontrada.
+					</font>
+				</p>
+				<p style="text-align: justify">
+				    <font size="2">
+                        Para acessar novamente o Sistema da Nota Fiscal de Serviços Eletrônica
+						<a id="ctl00_cphCabMenu_hlinicio" href="default.aspx">CLIQUE AQUI</a>.</font></p>
+			</td>
+		</tr>
+		<tr>
+			<td class="tableItem">
+				<p style="text-align: justify">
+					<font size="2">
+				    	Atenciosamente,
+				    </font>
+				</p>
+				<p align="center">
+				    <font size="2">
+				        <strong>
+				            Setor de Atendimento
+				            <br />
+							<span id="ctl00_cphCabMenu_lblPrefeitura"><b>Prefeitura de São Paulo</b></span>
+						</strong>
+					</font>
+				</p>
+			</td>
+		</tr>
+	</table>
+
+                    </div>
+                </div>
+
+                <div class="clear"></div>
+
+                <div id="foot">
+                    
+<style type="text/css">
+    .style1 {
+        width: 171px;
+    }
+
+    .fira2 {
+        font-family: 'Fira Sans' !important;
+        font-style: normal;
+        font-weight: 300;
+    }
+</style>
+<table class="footerPortal">
+    <tr>
+        <td style="vertical-align: top; text-align: left; width: 15%; padding-left: 10px" class="style1">
+            <a href="http://www.capital.sp.gov.br">
+                <img src="portal/images/LogoPrefRodape.png" id="ctl00_fot_LogoPrefRodape" alt="LogoPrefRodape" border="0" style="width: 143px;" /></a>
+        </td>
+        <td class="fira">
+            Secretaria Municipal da Fazenda<br />
+            Rua Líbero Badaró, 190, Centro - CEP: 01008-000
+            <br />
+            <img src="/portal/images/e-mail.svg" alt="Email" style="vertical-align: middle; width: 16px; margin-right: 5px;" />
+            <a href="https://sp156.prefeitura.sp.gov.br/portal/servicos/informacao?servico=3383">Fale com a Fazenda</a><br />
+            <img src="/portal/images/telefone.svg" alt="Telefone" style="vertical-align: middle; width: 16px; margin-right: 5px;" />
+            156
+        </td>
+        <td style="vertical-align: bottom; text-align: center; vertical-align: middle; width: 25%;">
+            
+        </td>
+        <td style="vertical-align: middle; text-align: right; width: 25%;">
+            
+        </td>
+    </tr>
+</table>
+
+                </div>
+            </div>
+        
+<script type="module" crossorigin src="https://cav.prefeitura.sp.gov.br/cdn/cav-vue@0.0.1/index.js?k=d395115531b94bcbb2acdf452afba7f5"></script>
+<script type="text/javascript">
+//<![CDATA[
+var ctl00_wpMenuLateral_mnuRotinas_Data = new Object();
+ctl00_wpMenuLateral_mnuRotinas_Data.disappearAfter = 500;
+ctl00_wpMenuLateral_mnuRotinas_Data.horizontalOffset = 0;
+ctl00_wpMenuLateral_mnuRotinas_Data.verticalOffset = 0;
+ctl00_wpMenuLateral_mnuRotinas_Data.iframeUrl = '/WebResource.axd?d=beToSAE3vdsL1QUQUxjWdepsxVkM-4FDMXOkP91MLZFHh5ZNjWZrYBZuWQ0vls_3rpWK-w2&t=638285957964787378';
+//]]>
+</script>
+</form>
+    </div>
+
+    
+</body>
+</html>

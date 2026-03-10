@@ -1,0 +1,12 @@
+const fs = require('fs');
+const b64 = "5zXKgb/MuLSqFlSbdBK7NfSB28yBNpER6015hs5p8aD/z62G/eGGEJC8M/FHicN4n8HpHK2gLXkacnNW4L87iwmPsgqceMh1JjvOOgTiMyB9Kt9o5PRbOsELtC8DSlb3b+g+IN/QGwlTuxH3QLuHayBe9v4GOHcHaCq5TUmnm8MQrNRovpyuur+wF4yuouewKCZSG65p0QpxecOksc6Zm3z9D8IangG2aFHoxdDusV9zOvlBSHKpdoz4KWAmam81TNSWN0JD3fdpzoxosJaNpSFTm1tC89i3fwLwhc48QGmSkDdV1xZKhkKr9vQ6DHyNT/ubqFovB5tc4J/8E8gvCPrOrjQOtOI96DwRkCcAP150DzetJE0RkeW81QZHm3nsjyMntJMyq/LcUx8iUBqbF/dY2MchtokcxLlS2q2IJtZVfibGVNcLKQDYpaxiX1mE4NlQyXbQaVRB/S2C8WBC6hxzTQq3QnUQCSHqMYm622lPbgGpDg4Wl9lUmFWUUvgUjnw0gwweAAprY4F4XW97zogzMS+7RXvW3pA2x6Jz/TxYG+RC9VLEBnuTYlLr3iK8bkJ09gCxXNKCFVDgTuQRLpMI+CzuS2vi4clq+Q89nRRPTiyqTII17Yb3uysPC6gZt/xzR8CR2e1qYozWHTBn2eJT2QG9X/z94Lkcyo0Jal3Lwjv59Ibk5vL3/sdreTfkAoY/hUxh7gKvniv6fQCFolw4lr7QI9ApDWxkCJOdvltJp/xVxkWMkYYIOWTuKnWCpgWgZMo4yhZ5Ml/QcYhapOOLWwT5SijCcT18EGP7fAo9s1T6tefQ4dQvyI3cCDECrAo9R6jD56CKU/VB6Isyas/5W10C1IgfcMFYPTx97oCze4wwwyei3pe1kiTZxTw9ze4B7ll050QSYrp9T7PpvW8TJ59TsWEXsxs1VWoWTU7diy4wLJ5wDxlOiuNUguZDsMEuNrAmjUmNJUOeMboaFgGM/cc+Jx4Io+QDrazFt9ulFAFKeu7FeQhZnBVPqsMjow2fA5QlkoEb86v6hsD0f8fHZuU5qvCIsSkU9ig9xYaNx30d233U0JtWpzevzl9aclpkUhAdA8W0eeUnNBi6ta9mORUrDqMwlweT0fW9ils/6DjeI+CY+vSgN+T27aM/K0oayo/sJwRgzCstZwFftKSURBe1tMGqJ2gnOuftU0IiAbHO9p+IFlyNKVQ6FKn6ke4frn6q7gPhmHi+O+77AOOT7hznKZZvNYVLe42EH95D5IKoHRkggQE0KF7ytsucgRviJoHoECa8R/E0Wc2fgKFctnYUyjTKo5VX7qOgHU9hKbdP7pSI7N1Vq4vcadCQ3QJuCbWgs2VSNNrIBt4eWVXard+82P6s69U3450wmV8Gs+IgahaMDswHzAHBgUrDgMCGgQUU5CuERlc5nB6kCZ3BoSSARR07Q8EFOQbQ+spB2ui+Yki3bgOZwTTETcgAgIH0A==";
+const buf = Buffer.from(b64, 'base64');
+console.log("Hex start:", buf.subarray(0, 20).toString('hex'));
+console.log("String:", buf.toString('utf8'));
+try {
+    const forge = require('node-forge');
+    const p12Asn1 = forge.asn1.fromDer(buf.toString('binary'));
+    console.log("Is ASN1? Yes");
+} catch(e) {
+    console.log("Is ASN1? No");
+}

@@ -1,0 +1,7 @@
+{
+  "name": "CCI - Conciliador Contábil Inteligente",
+  "description": "Uma plataforma avançada para automação de conciliação bancária e contábil usando Inteligência Artificial com OCR Multimodal.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
